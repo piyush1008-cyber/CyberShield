@@ -8,12 +8,17 @@
     "dev": "nodemon server.js",
     "seed": "node config/seeder.js"
   },
-  "keywords": ["cybercrime", "complaint", "investigation", "management"],
+  "keywords": [
+    "cybercrime",
+    "complaint",
+    "investigation",
+    "management"
+  ],
   "author": "Abdul",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "cloudinary": "^1.41.0",
+    "cloudinary": "^2.10.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
@@ -24,10 +29,13 @@
     "mongoose": "^8.7.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "multer-storage-cloudinary": "^4.0.0",
-    "nodemailer": "^6.9.15"
+    "multer-storage-cloudinary": "^2.2.1",
+    "nodemailer": "^9.0.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
+  },
+  "allowScripts": {
+    "core-js@3.49.0": true
   }
 }
