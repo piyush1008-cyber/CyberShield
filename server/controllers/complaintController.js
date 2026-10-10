@@ -1,6 +1,8 @@
 const Complaint = require('../models/Complaint');
 const Notification = require('../models/Notification');
 const generateTrackingId = require('../utils/generateTrackingId');
+const { determinePriority } = require('../utils/aiService');
+const crypto = require('crypto');
 
 // @desc    Create a new complaint
 // @route   POST /api/complaints
@@ -18,13 +20,22 @@ const createComplaint = async (req, res, next) => {
       if (!existing) isUnique = true;
     }
 
+    // Determine priority via AI
+    const priority = await determinePriority(title, description, category);
+
+    // Generate cryptographic hash (Section 65B)
+    const hashContent = `${title}|${description}|${category}|${req.user._id}|${incidentDate}|${Date.now()}`;
+    const digitalHash = crypto.createHash('sha256').update(hashContent).digest('hex');
+
     const complaint = await Complaint.create({
       trackingId,
       citizenId: req.user._id,
       title,
       description,
       category,
-      incidentDate
+      incidentDate,
+      priority,
+      digitalHash
     });
 
     // Create notification for the citizen
@@ -200,7 +211,7 @@ const updateComplaint = async (req, res, next) => {
 // @access  Private (Investigator/Admin)
 const updateComplaintStatus = async (req, res, next) => {
   try {
-    const { status, rejectionReason } = req.body;
+    const { status, rejectionReason, scammerDetails, legalSections } = req.body;
 
     const complaint = await Complaint.findById(req.params.id);
     if (!complaint) {
@@ -214,15 +225,32 @@ const updateComplaintStatus = async (req, res, next) => {
     if (status === 'Rejected' && rejectionReason) {
       complaint.rejectionReason = rejectionReason;
     }
+    
+    if (status === 'Resolved') {
+      if (scammerDetails) complaint.scammerDetails = scammerDetails;
+      if (legalSections) complaint.legalSections = legalSections;
+    }
 
     await complaint.save();
 
     // Notify the citizen
+    let message = `Your complaint "${complaint.title}" status has been updated to: ${status}. Please check your portal for the official report.`;
+    let title = 'Complaint Status Updated';
+
+    if (status === 'Resolved') {
+      message = `Your case is sorted. The case has been resolved and your official report is ready.`;
+      title = 'Case Resolved';
+    } else if (status === 'Unsolved') {
+      title = 'Case Unsolved';
+    } else if (status === 'Closed') {
+      title = 'Case Closed';
+    }
+
     await Notification.create({
       userId: complaint.citizenId,
       type: 'status_update',
-      title: 'Complaint Status Updated',
-      message: `Your complaint "${complaint.title}" status has been updated to: ${status}`,
+      title: title,
+      message: message,
       relatedComplaint: complaint._id
     });
 

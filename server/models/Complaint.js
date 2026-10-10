@@ -45,6 +45,7 @@ const complaintSchema = new mongoose.Schema({
       'Assigned',
       'Under Investigation',
       'Resolved',
+      'Unsolved',
       'Closed'
     ],
     default: 'Submitted'
@@ -66,6 +67,20 @@ const complaintSchema = new mongoose.Schema({
   additionalInfo: {
     type: String,
     maxlength: 3000,
+    default: null
+  },
+  scammerDetails: {
+    type: String,
+    maxlength: 3000,
+    default: null
+  },
+  legalSections: {
+    type: String,
+    maxlength: 500,
+    default: null
+  },
+  digitalHash: {
+    type: String,
     default: null
   },
   rejectionReason: {

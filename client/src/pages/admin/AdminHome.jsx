@@ -13,9 +13,9 @@ const COLORS = ['#6366f1', '#8b5cf6', '#06b6d4', '#f59e0b', '#10b981', '#ef4444'
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[#1E293B] border border-[#334155] rounded-lg px-3 py-2 shadow-lg">
-        <p className="text-white text-sm font-medium">{label || payload[0].name}</p>
-        <p className="text-indigo-400 text-sm">{payload[0].value} complaints</p>
+      <div className="bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-lg">
+        <p className="text-slate-900 text-sm font-bold">{label || payload[0].name}</p>
+        <p className="text-indigo-600 text-sm">{payload[0].value} complaints</p>
       </div>
     );
   }
@@ -70,8 +70,8 @@ const AdminHome = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">⚙️ Admin Control Center</h1>
-        <p className="text-slate-400 mt-1">System overview and management — powered by AI analytics</p>
+        <h1 className="text-2xl font-bold text-slate-900">⚙️ Admin Control Center</h1>
+        <p className="text-slate-500 mt-1 font-medium">System overview and management — powered by AI analytics</p>
       </div>
 
       {/* Stats Grid */}
@@ -85,8 +85,8 @@ const AdminHome = () => {
       {/* Charts Row 1: Pie + Bar */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pie Chart - Category Distribution */}
-        <div className="bg-[#1E293B] border border-[#334155] rounded-xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">📊 Complaints by Category</h2>
+        <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
+          <h2 className="text-lg font-bold text-slate-900 mb-4">📊 Complaints by Category</h2>
           {categoryData.length > 0 ? (
             <ResponsiveContainer width="100%" height={280}>
               <PieChart>
@@ -105,7 +105,7 @@ const AdminHome = () => {
                 </Pie>
                 <Tooltip content={<CustomTooltip />} />
                 <Legend
-                  wrapperStyle={{ fontSize: '12px', color: '#94a3b8' }}
+                  wrapperStyle={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }}
                   iconType="circle"
                 />
               </PieChart>
@@ -116,14 +116,14 @@ const AdminHome = () => {
         </div>
 
         {/* Bar Chart - By Status */}
-        <div className="bg-[#1E293B] border border-[#334155] rounded-xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">📈 Complaints by Status</h2>
+        <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
+          <h2 className="text-lg font-bold text-slate-900 mb-4">📈 Complaints by Status</h2>
           {statusData.length > 0 ? (
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={statusData} barSize={40}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 11 }} />
-                <YAxis tick={{ fill: '#94a3b8', fontSize: 12 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 11, fontWeight: '500' }} />
+                <YAxis tick={{ fill: '#64748b', fontSize: 12, fontWeight: '500' }} />
                 <Tooltip content={<CustomTooltip />} />
                 <Bar dataKey="count" radius={[6, 6, 0, 0]}>
                   {statusData.map((_, i) => (
@@ -139,8 +139,8 @@ const AdminHome = () => {
       </div>
 
       {/* Charts Row 2: Area Chart - Monthly Trends */}
-      <div className="bg-[#1E293B] border border-[#334155] rounded-xl p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">📉 Monthly Complaint Trends</h2>
+      <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
+        <h2 className="text-lg font-bold text-slate-900 mb-4">📉 Monthly Complaint Trends</h2>
         <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={monthlyData}>
             <defs>
@@ -153,11 +153,11 @@ const AdminHome = () => {
                 <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-            <XAxis dataKey="month" tick={{ fill: '#94a3b8', fontSize: 12 }} />
-            <YAxis tick={{ fill: '#94a3b8', fontSize: 12 }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            <XAxis dataKey="month" tick={{ fill: '#64748b', fontSize: 12, fontWeight: '500' }} />
+            <YAxis tick={{ fill: '#64748b', fontSize: 12, fontWeight: '500' }} />
             <Tooltip content={<CustomTooltip />} />
-            <Legend wrapperStyle={{ fontSize: '12px', color: '#94a3b8' }} />
+            <Legend wrapperStyle={{ fontSize: '12px', color: '#64748b', fontWeight: '500' }} />
             <Area type="monotone" dataKey="complaints" stroke="#6366f1" fillOpacity={1} fill="url(#colorComplaints)" strokeWidth={2} />
             <Area type="monotone" dataKey="resolved" stroke="#10b981" fillOpacity={1} fill="url(#colorResolved)" strokeWidth={2} />
           </AreaChart>
@@ -165,31 +165,31 @@ const AdminHome = () => {
       </div>
 
       {/* Recent Complaints */}
-      <div className="bg-[#1E293B] border border-[#334155] rounded-xl overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#334155]">
-          <h2 className="text-lg font-semibold text-white">Recent Complaints (Pending Review)</h2>
-          <Link to="/admin/complaints" className="text-sm text-blue-400 hover:text-blue-300">View all →</Link>
+      <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200 bg-slate-50">
+          <h2 className="text-lg font-bold text-slate-900">Recent Complaints (Pending Review)</h2>
+          <Link to="/admin/complaints" className="text-sm font-semibold text-blue-600 hover:text-blue-700">View all →</Link>
         </div>
         {stats?.recentComplaints?.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
-                  <th className="px-5 py-3">ID</th>
-                  <th className="px-5 py-3">Citizen</th>
-                  <th className="px-5 py-3">Title</th>
-                  <th className="px-5 py-3">Category</th>
-                  <th className="px-5 py-3">Status</th>
+                <tr className="text-left text-xs font-bold text-slate-500 uppercase tracking-wider bg-slate-50">
+                  <th className="px-6 py-4">ID</th>
+                  <th className="px-6 py-4">Citizen</th>
+                  <th className="px-6 py-4">Title</th>
+                  <th className="px-6 py-4">Category</th>
+                  <th className="px-6 py-4">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#334155]">
+              <tbody className="divide-y divide-slate-200">
                 {stats.recentComplaints.map(c => (
-                  <tr key={c._id} className="hover:bg-[#334155]/30 transition-colors">
-                    <td className="px-5 py-3 text-blue-400 font-mono text-sm">{c.trackingId}</td>
-                    <td className="px-5 py-3 text-sm text-slate-300">{c.citizenId?.name || 'N/A'}</td>
-                    <td className="px-5 py-3 text-sm text-white truncate max-w-[200px]">{c.title}</td>
-                    <td className="px-5 py-3 text-sm text-slate-300">{c.category}</td>
-                    <td className="px-5 py-3"><StatusBadge status={c.status} /></td>
+                  <tr key={c._id} className="hover:bg-slate-50 transition-colors">
+                    <td className="px-6 py-4 text-blue-600 font-mono text-sm font-semibold">{c.trackingId}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-700">{c.citizenId?.name || 'N/A'}</td>
+                    <td className="px-6 py-4 text-sm font-semibold text-slate-900 truncate max-w-[200px]">{c.title}</td>
+                    <td className="px-6 py-4 text-sm text-slate-600">{c.category}</td>
+                    <td className="px-6 py-4"><StatusBadge status={c.status} /></td>
                   </tr>
                 ))}
               </tbody>

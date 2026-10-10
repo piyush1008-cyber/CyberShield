@@ -17,12 +17,12 @@ router.use(protect);
 // PDF Download (Citizens, Investigators, Admins)
 router.get('/:id/pdf', downloadComplaintPDF);
 
-// Citizen routes
-router.post('/', authorize('citizen'), createComplaint);
+// Citizen (and Admin for testing) routes
+router.post('/', authorize('citizen', 'admin'), createComplaint);
 router.get('/', getComplaints);
 router.get('/:id', getComplaintById);
-router.get('/track/:trackingId', authorize('citizen'), trackComplaint);
-router.put('/:id', authorize('citizen'), updateComplaint);
+router.get('/track/:trackingId', authorize('citizen', 'admin'), trackComplaint);
+router.put('/:id', authorize('citizen', 'admin'), updateComplaint);
 
 // Investigator & Admin routes
 router.put('/:id/status', authorize('investigator', 'admin'), updateComplaintStatus);

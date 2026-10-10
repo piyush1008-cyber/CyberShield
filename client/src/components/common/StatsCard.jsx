@@ -1,31 +1,31 @@
 const StatsCard = ({ title, value, icon: Icon, color = 'blue', trend, subtitle }) => {
   const colorMap = {
-    blue: { bg: 'from-blue-600/20 to-blue-600/5', border: 'border-blue-500/20', text: 'text-blue-400', icon: 'from-blue-500 to-blue-600' },
-    green: { bg: 'from-emerald-600/20 to-emerald-600/5', border: 'border-emerald-500/20', text: 'text-emerald-400', icon: 'from-emerald-500 to-emerald-600' },
-    amber: { bg: 'from-amber-600/20 to-amber-600/5', border: 'border-amber-500/20', text: 'text-amber-400', icon: 'from-amber-500 to-amber-600' },
-    red: { bg: 'from-red-600/20 to-red-600/5', border: 'border-red-500/20', text: 'text-red-400', icon: 'from-red-500 to-red-600' },
-    purple: { bg: 'from-violet-600/20 to-violet-600/5', border: 'border-violet-500/20', text: 'text-violet-400', icon: 'from-violet-500 to-violet-600' },
-    cyan: { bg: 'from-cyan-600/20 to-cyan-600/5', border: 'border-cyan-500/20', text: 'text-cyan-400', icon: 'from-cyan-500 to-cyan-600' }
+    blue: { icon: 'bg-blue-100 text-blue-600', trendOk: 'text-blue-600', border: 'border-slate-200' },
+    green: { icon: 'bg-emerald-100 text-emerald-600', trendOk: 'text-emerald-600', border: 'border-slate-200' },
+    amber: { icon: 'bg-amber-100 text-amber-600', trendOk: 'text-amber-600', border: 'border-slate-200' },
+    red: { icon: 'bg-red-100 text-red-600', trendOk: 'text-red-600', border: 'border-slate-200' },
+    purple: { icon: 'bg-purple-100 text-purple-600', trendOk: 'text-purple-600', border: 'border-slate-200' },
+    cyan: { icon: 'bg-cyan-100 text-cyan-600', trendOk: 'text-cyan-600', border: 'border-slate-200' }
   };
 
   const c = colorMap[color] || colorMap.blue;
 
   return (
-    <div className={`bg-gradient-to-br ${c.bg} border ${c.border} rounded-xl p-5 hover:scale-[1.02] transition-all duration-300`}>
-      <div className="flex items-start justify-between">
+    <div className={`bg-white border ${c.border} rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 relative overflow-hidden group`}>
+      <div className="flex items-start justify-between relative z-10">
         <div>
-          <p className="text-sm text-slate-400 font-medium">{title}</p>
-          <p className="text-3xl font-bold text-white mt-1">{value}</p>
-          {subtitle && <p className="text-xs text-slate-500 mt-1">{subtitle}</p>}
+          <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">{title}</p>
+          <p className="text-4xl font-extrabold text-slate-900 mt-2">{value}</p>
+          {subtitle && <p className="text-sm text-slate-500 mt-2 font-medium">{subtitle}</p>}
           {trend && (
-            <p className={`text-xs mt-2 ${trend > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+            <p className={`text-sm mt-3 font-semibold ${trend > 0 ? c.trendOk : 'text-red-600'}`}>
               {trend > 0 ? '↑' : '↓'} {Math.abs(trend)}% from last month
             </p>
           )}
         </div>
         {Icon && (
-          <div className={`w-10 h-10 bg-gradient-to-br ${c.icon} rounded-lg flex items-center justify-center`}>
-            <Icon className="w-5 h-5 text-white" />
+          <div className={`w-14 h-14 ${c.icon} rounded-xl flex items-center justify-center`}>
+            <Icon className="w-7 h-7" />
           </div>
         )}
       </div>

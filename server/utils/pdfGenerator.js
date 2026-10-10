@@ -99,6 +99,33 @@ function generateComplaintPDF(complaint, res) {
       lineGap: 3
     });
 
+  // Section 4: Resolution Report (Only if solved)
+  if (complaint.status === 'Resolved' || complaint.status === 'Solved') {
+    y = doc.y + 35;
+    
+    // Add page if needed
+    if (y > 700) {
+      doc.addPage();
+      y = 40;
+    }
+
+    doc.fillColor('#059669').fontSize(13).font('Helvetica-Bold')
+      .text('OFFICIAL LAW ENFORCEMENT RESOLUTION', 40, y);
+    doc.rect(40, y + 18, 515, 2).fill('#10b981');
+
+    y += 30;
+    doc.fillColor('#065f46').fontSize(12).font('Helvetica-Bold')
+      .text('Your case is solved, and here is your report.', 40, y);
+    
+    y += 25;
+    doc.fillColor('#475569').fontSize(10).font('Helvetica-Bold').text('Identified Culprit / Scammer:', col1, y);
+    doc.fillColor('#0f172a').font('Helvetica').text(complaint.scammerDetails || 'Not specified', col1, y + 15, { width: 505 });
+    
+    y = doc.y + 20;
+    doc.fillColor('#475569').fontSize(10).font('Helvetica-Bold').text('Applicable Legal Sections (Indian Law):', col1, y);
+    doc.fillColor('#0f172a').font('Helvetica').text(complaint.legalSections || 'Not specified', col1, y + 15, { width: 505 });
+  }
+
   // Footer & Disclaimer
   doc.fontSize(8).fillColor('#64748b')
     .text(

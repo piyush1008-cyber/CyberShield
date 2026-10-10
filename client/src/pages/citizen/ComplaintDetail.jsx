@@ -69,7 +69,9 @@ const ComplaintDetail = () => {
   if (loading) return <LoadingSpinner />;
   if (!complaint) return <div className="text-center text-slate-400 py-12">Complaint not found</div>;
 
-  const statusSteps = ['Submitted', 'Under Review', 'Assigned', 'Under Investigation', 'Resolved'];
+  let statusSteps = ['Submitted', 'Under Review', 'Assigned', 'Under Investigation', 'Resolved'];
+  if (complaint.status === 'Unsolved') statusSteps = ['Submitted', 'Under Review', 'Assigned', 'Under Investigation', 'Unsolved'];
+  if (complaint.status === 'Closed') statusSteps = ['Submitted', 'Under Review', 'Assigned', 'Under Investigation', 'Closed'];
   const currentStep = statusSteps.indexOf(complaint.status);
 
   return (
@@ -96,6 +98,11 @@ const ComplaintDetail = () => {
               <HiOutlineDownload className="w-4 h-4" />
               {downloadingPDF ? 'Generating...' : 'Download PDF'}
             </button>
+            {complaint.digitalHash && (
+              <div title={`SHA-256 Hash: ${complaint.digitalHash}`} className="flex items-center gap-1.5 px-2 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-semibold cursor-help">
+                🔒 Tamper-Proof (Sec 65B)
+              </div>
+            )}
             <PriorityBadge priority={complaint.priority} />
             <StatusBadge status={complaint.status} />
           </div>
@@ -133,6 +140,52 @@ const ComplaintDetail = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Details */}
         <div className="lg:col-span-2 space-y-6">
+          
+          {/* Official Resolution Report (Only if resolved) */}
+          {complaint.status === 'Resolved' && (
+            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center text-emerald-400 text-xl">
+                  ✓
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-emerald-400">Case Sorted & Resolved</h2>
+                  <p className="text-sm text-emerald-400/80">Official Law Enforcement Report</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                {complaint.scammerDetails && (
+                  <div>
+                    <p className="text-xs text-emerald-500/70 uppercase font-bold tracking-wider mb-1">Identified Culprit / Scammer</p>
+                    <p className="text-sm text-emerald-50 font-medium whitespace-pre-wrap bg-emerald-900/20 p-3 rounded-lg border border-emerald-500/10">{complaint.scammerDetails}</p>
+                  </div>
+                )}
+                {complaint.legalSections && (
+                  <div>
+                    <p className="text-xs text-emerald-500/70 uppercase font-bold tracking-wider mb-1">Applicable Judiciary Laws</p>
+                    <p className="text-sm text-emerald-50 font-medium bg-emerald-900/20 p-3 rounded-lg border border-emerald-500/10">{complaint.legalSections}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Unsolved Case Report */}
+          {complaint.status === 'Unsolved' && (
+            <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-amber-500/20 rounded-full flex items-center justify-center text-amber-400 text-xl">
+                  ❓
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-amber-400">Case Unsolved</h2>
+                  <p className="text-sm text-amber-400/80">Investigation paused due to lack of leads or evidence.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="bg-[#1E293B] border border-[#334155] rounded-xl p-6">
             <h2 className="text-lg font-semibold text-white mb-4">Complaint Details</h2>
             <div className="grid grid-cols-2 gap-4 mb-4">

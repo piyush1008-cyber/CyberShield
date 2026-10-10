@@ -8,7 +8,6 @@ import {
   InvestigatorDashboard,
   AdminDashboard
 } from './pages';
-import LandingPage from './pages/LandingPage';
 import URLScanner from './pages/tools/URLScanner';
 import ChatBot from './components/ChatBot';
 import './index.css';
@@ -118,7 +117,7 @@ function App() {
           <Route path="/tools/url-scanner" element={<URLScanner />} />
 
           {/* Default redirect */}
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
 
           {/* 404 */}
           <Route

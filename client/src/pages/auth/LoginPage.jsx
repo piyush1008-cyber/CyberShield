@@ -34,7 +34,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F172A] flex">
+    <div className="min-h-screen bg-slate-50 flex">
       {/* Left Panel - Branding */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-cyan-600" />
@@ -85,21 +85,21 @@ const LoginPage = () => {
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-3 mb-8 justify-center">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
               <span className="text-xl">🛡️</span>
             </div>
-            <span className="text-xl font-bold text-white">CyberShield</span>
+            <span className="text-xl font-bold text-slate-900">CyberShield</span>
           </div>
 
           <div className="mb-8">
-            <h2 className="text-3xl font-bold text-white mb-2">Welcome back</h2>
-            <p className="text-slate-400">Sign in to your account to continue</p>
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">Welcome back</h2>
+            <p className="text-slate-600">Sign in to your account to continue</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Email Address</label>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">Email Address</label>
               <div className="relative">
                 <HiOutlineMail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                 <input
@@ -108,15 +108,15 @@ const LoginPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
-                  className="w-full pl-11 pr-4 py-3 bg-[#1E293B] border border-[#334155] rounded-xl text-white placeholder-slate-500 
-                    focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 
+                    focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all shadow-sm"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Password</label>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">Password</label>
               <div className="relative">
                 <HiOutlineLockClosed className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                 <input
@@ -125,8 +125,8 @@ const LoginPage = () => {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className="w-full pl-11 pr-12 py-3 bg-[#1E293B] border border-[#334155] rounded-xl text-white placeholder-slate-500 
-                    focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
+                  className="w-full pl-11 pr-12 py-3 bg-white border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 
+                    focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all shadow-sm"
                 />
                 <button
                   type="button"
@@ -141,10 +141,10 @@ const LoginPage = () => {
             {/* Remember me & Forgot */}
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="w-4 h-4 rounded bg-[#1E293B] border-[#334155] text-blue-500 focus:ring-blue-500" />
-                <span className="text-sm text-slate-400">Remember me</span>
+                <input type="checkbox" className="w-4 h-4 rounded bg-white border-slate-300 text-blue-600 focus:ring-blue-500" />
+                <span className="text-sm text-slate-600 font-medium">Remember me</span>
               </label>
-              <a href="#" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">Forgot password?</a>
+              <a href="#" className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors">Forgot password?</a>
             </div>
 
             {/* Submit */}
@@ -171,19 +171,19 @@ const LoginPage = () => {
           </form>
 
           {/* Demo Accounts */}
-          <div className="mt-6 p-4 bg-[#1E293B]/50 border border-[#334155] rounded-xl">
-            <p className="text-xs text-slate-500 mb-2 font-medium">DEMO ACCOUNTS</p>
-            <div className="space-y-1 text-xs text-slate-400">
-              <p>👤 Citizen: <span className="text-slate-300">citizen@demo.com</span> / <span className="text-slate-300">password123</span></p>
-              <p>🔍 Investigator: <span className="text-slate-300">investigator@demo.com</span> / <span className="text-slate-300">password123</span></p>
-              <p>⚙️ Admin: <span className="text-slate-300">admin@demo.com</span> / <span className="text-slate-300">password123</span></p>
+          <div className="mt-6 p-5 bg-blue-50/50 border border-blue-100 rounded-xl shadow-sm">
+            <p className="text-xs text-blue-600 mb-3 font-bold">DEMO ACCOUNTS</p>
+            <div className="space-y-2 text-sm text-slate-600 font-medium">
+              <p>👤 Citizen: <span className="text-slate-900 font-bold">citizen@demo.com</span> / <span className="text-slate-900">password123</span></p>
+              <p>🔍 Investigator: <span className="text-slate-900 font-bold">investigator@demo.com</span> / <span className="text-slate-900">password123</span></p>
+              <p>⚙️ Admin: <span className="text-slate-900 font-bold">admin@demo.com</span> / <span className="text-slate-900">password123</span></p>
             </div>
           </div>
 
           {/* Register link */}
-          <p className="mt-6 text-center text-sm text-slate-400">
+          <p className="mt-6 text-center text-sm font-medium text-slate-600">
             Don't have an account?{' '}
-            <Link to="/register" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+            <Link to="/register" className="text-blue-600 hover:text-blue-700 font-bold transition-colors">
               Create one →
             </Link>
           </p>

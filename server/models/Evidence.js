@@ -47,6 +47,10 @@ const evidenceSchema = new mongoose.Schema({
     type: String,
     maxlength: 500,
     default: null
+  },
+  digitalHash: {
+    type: String,
+    required: true
   }
 }, {
   timestamps: true

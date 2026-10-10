@@ -13,8 +13,8 @@ const CaseDetail = () => {
   const [downloadingPDF, setDownloadingPDF] = useState(false);
   const [newNote, setNewNote] = useState('');
   const [newMessage, setNewMessage] = useState('');
-  const [newStatus, setNewStatus] = useState('');
   const [newPriority, setNewPriority] = useState('');
+  const [resolveModal, setResolveModal] = useState({ open: false, scammerDetails: '', legalSections: '' });
 
   const handleDownloadPDF = async () => {
     setDownloadingPDF(true);
@@ -42,7 +42,6 @@ const CaseDetail = () => {
     try {
       const cRes = await complaintAPI.getById(id);
       setComplaint(cRes.data.data);
-      setNewStatus(cRes.data.data.status);
       setNewPriority(cRes.data.data.priority);
       try {
         const iRes = await investigationAPI.get(id);
@@ -72,10 +71,20 @@ const CaseDetail = () => {
     } catch { toast.error('Failed to send message'); }
   };
 
-  const updateStatus = async () => {
+  const updateStatus = async (targetStatus) => {
+    if (targetStatus === 'Resolved' && !resolveModal.open) {
+      setResolveModal({ open: true, scammerDetails: complaint.scammerDetails || '', legalSections: complaint.legalSections || '' });
+      return;
+    }
     try {
-      await complaintAPI.updateStatus(id, { status: newStatus });
-      toast.success(`Status updated to ${newStatus}`);
+      const payload = { status: targetStatus };
+      if (targetStatus === 'Resolved') {
+        payload.scammerDetails = resolveModal.scammerDetails;
+        payload.legalSections = resolveModal.legalSections;
+      }
+      await complaintAPI.updateStatus(id, payload);
+      toast.success(`Status updated to ${targetStatus}`);
+      setResolveModal({ open: false, scammerDetails: '', legalSections: '' });
       fetchDetails();
     } catch { toast.error('Failed to update status'); }
   };
@@ -115,6 +124,11 @@ const CaseDetail = () => {
               <HiOutlineDownload className="w-4 h-4" />
               {downloadingPDF ? 'Generating...' : 'Download PDF Report'}
             </button>
+            {complaint.digitalHash && (
+              <div title={`SHA-256 Hash: ${complaint.digitalHash}`} className="flex items-center gap-1.5 px-2 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-semibold cursor-help">
+                🔒 Tamper-Proof (Sec 65B)
+              </div>
+            )}
             <PriorityBadge priority={complaint.priority} />
             <StatusBadge status={complaint.status} />
           </div>
@@ -191,20 +205,27 @@ const CaseDetail = () => {
         {/* Right Sidebar - Actions */}
         <div className="space-y-4">
           <div className="bg-[#1E293B] border border-[#334155] rounded-xl p-5">
-            <h3 className="text-sm font-semibold text-white mb-3">Update Status</h3>
-            <select
-              value={newStatus}
-              onChange={(e) => setNewStatus(e.target.value)}
-              className="w-full px-3 py-2 bg-[#0F172A] border border-[#334155] rounded-lg text-sm text-white mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-            >
-              {['Assigned', 'Under Investigation', 'Resolved', 'Closed'].map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
-            <button
-              onClick={updateStatus}
-              className="w-full py-2 bg-blue-600/20 text-blue-400 border border-blue-500/30 rounded-lg hover:bg-blue-600/30 text-sm transition-colors"
-            >
-              Update Status
-            </button>
+            <h3 className="text-sm font-semibold text-white mb-3">Case Conclusion</h3>
+            <div className="space-y-2">
+              <button
+                onClick={() => updateStatus('Resolved')}
+                className="w-full py-2 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-600/30 text-sm transition-colors font-medium"
+              >
+                ✓ Mark as Solved
+              </button>
+              <button
+                onClick={() => updateStatus('Unsolved')}
+                className="w-full py-2 bg-amber-600/20 text-amber-400 border border-amber-500/30 rounded-lg hover:bg-amber-600/30 text-sm transition-colors font-medium"
+              >
+                ❓ Mark as Unsolved
+              </button>
+              <button
+                onClick={() => updateStatus('Closed')}
+                className="w-full py-2 bg-slate-600/20 text-slate-400 border border-slate-500/30 rounded-lg hover:bg-slate-600/30 text-sm transition-colors font-medium"
+              >
+                ✕ Close Case
+              </button>
+            </div>
           </div>
 
           <div className="bg-[#1E293B] border border-[#334155] rounded-xl p-5">
@@ -235,6 +256,49 @@ const CaseDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Resolve Modal */}
+      {resolveModal.open && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#1E293B] border border-[#334155] rounded-2xl w-full max-w-lg p-6 shadow-2xl">
+            <h3 className="text-lg font-bold text-white mb-2">✅ Resolve Case: Final Report</h3>
+            <p className="text-sm text-slate-400 mb-6">Enter the final findings to generate the official citizen report.</p>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-slate-300 mb-2">Scammer / Culprit Details</label>
+                <textarea
+                  value={resolveModal.scammerDetails}
+                  onChange={(e) => setResolveModal({ ...resolveModal, scammerDetails: e.target.value })}
+                  placeholder="E.g., Bank Account holder 'Rahul Kumar', IP address trace..."
+                  rows={3}
+                  className="w-full px-3 py-2 bg-[#0F172A] border border-[#334155] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-300 mb-2">Applicable Legal Sections (Indian Law)</label>
+                <input
+                  type="text"
+                  value={resolveModal.legalSections}
+                  onChange={(e) => setResolveModal({ ...resolveModal, legalSections: e.target.value })}
+                  placeholder="E.g., Section 420 IPC, Section 66D IT Act"
+                  className="w-full px-3 py-2 bg-[#0F172A] border border-[#334155] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                />
+              </div>
+              <div className="flex gap-3 pt-4">
+                <button onClick={() => setResolveModal({ ...resolveModal, open: false })}
+                  className="flex-1 py-2.5 bg-[#334155] text-slate-300 rounded-xl hover:bg-[#475569] transition-colors text-sm font-semibold">
+                  Cancel
+                </button>
+                <button onClick={() => updateStatus('Resolved')}
+                  className="flex-1 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-500 text-white rounded-xl hover:from-emerald-500 hover:to-teal-400 transition-all text-sm font-semibold shadow-lg shadow-emerald-600/20">
+                  Submit Final Report
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
