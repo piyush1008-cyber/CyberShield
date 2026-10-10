@@ -77,7 +77,6 @@ const complaintSchema = new mongoose.Schema({
 });
 
 // Indexes for optimized queries
-complaintSchema.index({ trackingId: 1 });
 complaintSchema.index({ citizenId: 1 });
 complaintSchema.index({ assignedTo: 1 });
 complaintSchema.index({ status: 1 });

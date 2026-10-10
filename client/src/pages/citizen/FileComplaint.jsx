@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { complaintAPI } from '../../services/api';
+import { complaintAPI, aiAPI } from '../../services/api';
 import toast from 'react-hot-toast';
-import { HiOutlineDocumentText, HiOutlinePhotograph, HiOutlineCheckCircle } from 'react-icons/hi';
+import { HiOutlineDocumentText, HiOutlinePhotograph, HiOutlineCheckCircle, HiSparkles } from 'react-icons/hi';
 
 const categories = [
   'Financial Fraud', 'Identity Theft', 'Online Harassment / Cyberbullying',
@@ -17,7 +17,30 @@ const FileComplaint = () => {
   const [formData, setFormData] = useState({
     title: '', description: '', category: '', incidentDate: ''
   });
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiResult, setAiResult] = useState(null);
   const navigate = useNavigate();
+
+  const handleAIClassify = async () => {
+    if (!formData.description || formData.description.length < 20) {
+      toast.error('Please write at least 20 characters to use AI classification');
+      return;
+    }
+    setAiLoading(true);
+    try {
+      const res = await aiAPI.classify({ title: formData.title, description: formData.description });
+      const data = res.data.data;
+      setAiResult(data);
+      if (data.category) {
+        setFormData(prev => ({ ...prev, category: data.category }));
+      }
+      toast.success(`AI classified as: ${data.category} (${data.priority} priority)`);
+    } catch (err) {
+      toast.error('AI classification failed. You can still select manually.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -174,6 +197,68 @@ const FileComplaint = () => {
               <HiOutlinePhotograph className="w-10 h-10 text-slate-500 mx-auto mb-2" />
               <p className="text-sm text-slate-400">Evidence upload will be available after submission</p>
               <p className="text-xs text-slate-500 mt-1">Supports: Images, PDFs, Documents (Max 10MB each)</p>
+            </div>
+
+            {/* AI Classification Button */}
+            <div className="bg-gradient-to-r from-purple-500/10 to-indigo-500/10 border border-purple-500/20 rounded-xl p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                    <HiSparkles className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-white font-medium text-sm">AI Auto-Classification</p>
+                    <p className="text-slate-400 text-xs">Let AI analyze and categorize your complaint</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAIClassify}
+                  disabled={aiLoading || !formData.description}
+                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-all flex items-center gap-2"
+                >
+                  {aiLoading ? (
+                    <><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg> Analyzing...</>
+                  ) : (
+                    <><HiSparkles className="w-4 h-4" /> AI Classify</>
+                  )}
+                </button>
+              </div>
+
+              {/* AI Results */}
+              {aiResult && (
+                <div className="mt-4 bg-[#0F172A] border border-[#334155] rounded-lg p-4 space-y-2">
+                  <div className="flex items-center gap-2 mb-2">
+                    <HiSparkles className="w-4 h-4 text-purple-400" />
+                    <span className="text-purple-400 text-sm font-semibold">AI Analysis Results</span>
+                    <span className="text-xs text-slate-500 ml-auto">{Math.round((aiResult.confidence || 0) * 100)}% confidence</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div className="bg-slate-800/60 rounded-lg px-3 py-2">
+                      <span className="text-slate-400 text-xs">Category</span>
+                      <p className="text-white font-medium">{aiResult.category}</p>
+                    </div>
+                    <div className="bg-slate-800/60 rounded-lg px-3 py-2">
+                      <span className="text-slate-400 text-xs">Priority</span>
+                      <p className={`font-medium ${aiResult.priority === 'Critical' ? 'text-red-400' : aiResult.priority === 'High' ? 'text-orange-400' : aiResult.priority === 'Medium' ? 'text-amber-400' : 'text-green-400'}`}>{aiResult.priority}</p>
+                    </div>
+                    <div className="bg-slate-800/60 rounded-lg px-3 py-2">
+                      <span className="text-slate-400 text-xs">Severity</span>
+                      <p className="text-white font-medium">{aiResult.severity_score}/10</p>
+                    </div>
+                    <div className="bg-slate-800/60 rounded-lg px-3 py-2">
+                      <span className="text-slate-400 text-xs">Summary</span>
+                      <p className="text-slate-300 text-xs">{aiResult.summary}</p>
+                    </div>
+                  </div>
+                  {aiResult.threat_indicators?.length > 0 && (
+                    <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+                      <span className="text-red-400 text-xs font-medium">⚠️ Threat Indicators:</span>
+                      <p className="text-slate-300 text-xs mt-1">{aiResult.threat_indicators.join(', ')}</p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="flex justify-between pt-2">

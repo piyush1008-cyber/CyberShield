@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { complaintAPI, investigationAPI } from '../../services/api';
 import { StatusBadge, PriorityBadge, LoadingSpinner } from '../../components';
+import { HiOutlineDownload } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 
 const ComplaintDetail = () => {
@@ -10,7 +11,28 @@ const ComplaintDetail = () => {
   const [investigation, setInvestigation] = useState(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [downloadingPDF, setDownloadingPDF] = useState(false);
   const [sendingMsg, setSendingMsg] = useState(false);
+
+  const handleDownloadPDF = async () => {
+    setDownloadingPDF(true);
+    try {
+      const res = await complaintAPI.downloadPDF(id);
+      const blob = new Blob([res.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `CyberShield_${complaint?.trackingId || 'Report'}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      toast.success('Official PDF report downloaded!');
+    } catch (err) {
+      toast.error('Failed to download PDF report');
+    } finally {
+      setDownloadingPDF(false);
+    }
+  };
 
   useEffect(() => { fetchDetails(); }, [id]);
 
@@ -65,7 +87,15 @@ const ComplaintDetail = () => {
             <h1 className="text-xl font-bold text-white">{complaint.title}</h1>
             <p className="text-sm text-slate-400 font-mono mt-1">{complaint.trackingId}</p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={handleDownloadPDF}
+              disabled={downloadingPDF}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white text-xs font-semibold rounded-lg transition-all shadow-md shadow-blue-500/20 active:scale-95 disabled:opacity-50"
+            >
+              <HiOutlineDownload className="w-4 h-4" />
+              {downloadingPDF ? 'Generating...' : 'Download PDF'}
+            </button>
             <PriorityBadge priority={complaint.priority} />
             <StatusBadge status={complaint.status} />
           </div>

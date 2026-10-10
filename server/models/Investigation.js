@@ -72,7 +72,6 @@ const investigationSchema = new mongoose.Schema({
 });
 
 // Indexes
-investigationSchema.index({ complaintId: 1 });
 investigationSchema.index({ investigatorId: 1 });
 investigationSchema.index({ status: 1 });
 

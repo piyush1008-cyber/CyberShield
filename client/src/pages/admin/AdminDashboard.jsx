@@ -7,6 +7,7 @@ import ManageUsers from './ManageUsers';
 const adminNav = [
   { path: '/admin/dashboard', label: 'Dashboard', icon: 'home', end: true },
   { path: '/admin/complaints', label: 'All Complaints', icon: 'clipboard' },
+  { path: '/tools/url-scanner', label: 'AI URL Scanner', icon: 'search' },
   { path: '/admin/users', label: 'Manage Users', icon: 'users' },
 ];
 

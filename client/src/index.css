@@ -41,3 +41,19 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #64748B;
 }
+
+/* Marquee Alert Banner */
+@keyframes marquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}

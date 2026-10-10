@@ -1,386 +1,160 @@
+# 🛡️ CyberShield — AI-Powered Cybersecurity & Incident Management Platform
+
 <p align="center">
-  <img src="https://img.shields.io/badge/CyberShield-v1.0-blueviolet?style=for-the-badge" alt="Version" />
-  <img src="https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
+  <img src="https://img.shields.io/badge/CyberShield-v2.0_AI_Edition-indigo?style=for-the-badge&logo=shield" alt="Version" />
+  <img src="https://img.shields.io/badge/AI_Engine-Gemini_3.8_Flash-blue?style=for-the-badge&logo=google" alt="AI Engine" />
   <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
-  <img src="https://img.shields.io/badge/MongoDB-8-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
-  <img src="https://img.shields.io/badge/License-ISC-blue?style=for-the-badge" alt="License" />
+  <img src="https://img.shields.io/badge/Node.js-24+-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
+  <img src="https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+  <img src="https://img.shields.io/badge/Multi--Lingual-11_Indian_Languages-orange?style=for-the-badge" alt="Languages" />
 </p>
 
-# 🛡️ CyberShield
+---
 
-### Cyber Crime Complaint & Investigation Management System
+## 📌 Executive Summary
 
-> A centralized full-stack web platform that bridges the gap between **citizens** and **law enforcement** — digitizing and streamlining the reporting, tracking, and investigation of cyber offenses.
+**CyberShield** is an enterprise-grade, **AI-powered cybercrime redressal and threat intelligence platform** designed for citizens, cybersecurity investigators, and law enforcement agencies. 
+
+Unlike traditional static complaint portals, CyberShield integrates **Google Gemini 3.8 Flash NLP**, **real-time heuristic URL threat scanning**, an **11-language Indian AI assistant**, **interactive visual analytics**, and **automated PDF forensic incident reporting** to drastically reduce incident response times and bridge the digital divide for Indian citizens.
 
 ---
 
-## 📌 About
+## 🚀 Key 2026 Advanced Features
 
-**CyberShield** is a comprehensive web application built as a Final Year Capstone Project. It empowers citizens to securely report cyber crimes, track their complaint status in real-time, and communicate with assigned investigators — all through an intuitive, role-based interface.
+### 1. 🤖 AI Complaint Auto-Classification (Gemini 3.8 Flash)
+* **Natural Language Processing (NLP)**: Automatically analyzes user-submitted incident narratives.
+* **Instant Triage**:
+  * Detects crime category (Financial Fraud, Phishing, Online Harassment, Ransomware, Identity Theft, etc.).
+  * Calculates severity score (1–10) and assigns priority (`Critical`, `High`, `Medium`, `Low`).
+  * Extracts threat indicators and key entities (phone numbers, UPI IDs, bank names, scam URLs).
+  * Auto-populates the complaint form, eliminating user confusion.
 
-### ✨ Why CyberShield?
+### 2. 🔍 Real-Time Phishing & URL Threat Scanner (`/tools/url-scanner`)
+* Standalone and integrated scanner accessible to all citizens and investigators.
+* Real-time heuristic and domain reputation analysis.
+* Evaluates typosquatting, deceptive institutional keywords, blacklisted TLDs, and credential harvesting vectors.
+* Outputs a **0–100 Risk Score Bar**, threat breakdown, and defensive mitigation guidance.
 
-- 🔐 **Secure** — JWT authentication, bcrypt password hashing, Helmet security headers, rate limiting
-- 📊 **Real-time Tracking** — Unique tracking IDs (`CS-2026-XXXXXX`) for every complaint
-- 👥 **Role-Based** — Three distinct user roles with tailored dashboards
-- 📱 **Responsive** — Fully responsive design that works on desktop, tablet, and mobile
-- ⚡ **Modern Stack** — Built with React 19, Express 4, MongoDB, and Tailwind CSS 4
+### 3. 🇮🇳 11-Language Indian AI Cybersecurity Chatbot
+* Floating assistant powered by Google Gemini with resilient fallback handling.
+* **Full Multi-Lingual Support** with native UI switching:
+  * **English**, **हिन्दी (Hindi)**, **Hinglish**, **मराठी (Marathi)**, **বাংলা (Bengali)**, **தமிழ் (Tamil)**, **తెలుగు (Telugu)**, **ગુજરાતી (Gujarati)**, **ಕನ್ನಡ (Kannada)**, **മലയാളം (Malayalam)**, **ਪੰਜਾਬੀ (Punjabi)**.
+* Dynamic localized quick prompts (e.g. *“UPI se paise kat gaye kya karu?”*, *“ऑनलाइन फ्रॉड की शिकायत कैसे करें?”*).
+* Direct integration of emergency safety workflows (National Cyber Helpline **1930** and bank freeze protocols).
 
----
+### 4. 📊 Visual Analytics Control Center (Recharts)
+* Replaces legacy tables with interactive charts:
+  * **Donut / Pie Chart**: Live crime category distribution.
+  * **Bar Chart**: Complaint status lifecycle breakdown.
+  * **Gradient Area Chart**: Monthly crime volume vs. resolution trends.
 
-## 🎯 Features
+### 5. 📄 Official PDF Incident Report Generation (`pdfkit`)
+* Generates legal-ready PDF receipts for citizens and forensic case summaries for investigators.
+* Features official government-style header, tracking ID badge, complainant details, chronological incident narrative, and legal disclaimer.
 
-### 👤 Citizen Portal
-- Register and file cyber crime complaints with categorized forms
-- Upload digital evidence (images, documents, screenshots)
-- Track complaint status using unique Tracking IDs
-- View investigation updates and communicate with investigators
-- Receive real-time notifications on case progress
-
-### 🔍 Investigator Dashboard
-- View and manage assigned cases in an organized workspace
-- Add investigation notes and case logs
-- Communicate with victims through a secure messaging system
-- Update case status and priority levels
-- Track investigation timeline and progress
-
-### ⚙️ Admin Panel
-- Comprehensive analytics dashboard with system-wide statistics
-- User management — create, edit, activate/deactivate accounts
-- Assign investigators to complaints
-- Monitor all complaints across the platform
-- Generate reports and oversee case distribution
-
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|---|---|
-| **Frontend** | React 19, React Router 7, Tailwind CSS 4, Axios, React Icons, React Hot Toast |
-| **Backend** | Node.js, Express.js 4, Mongoose ODM |
-| **Database** | MongoDB |
-| **Authentication** | JWT (JSON Web Tokens), bcryptjs |
-| **Security** | Helmet, CORS, express-rate-limit, express-validator |
-| **File Upload** | Multer, Cloudinary |
-| **Dev Tools** | Vite 8, Nodemon, OxLint |
+### 6. 🎬 Modern High-Tech Animated Landing Page
+* Built with **Framer Motion**: animated hero section, dynamic counters (2,400+ Users, 650+ Cases), workflow steps, testimonials, and one-click access to threat tools.
 
 ---
 
-## 📂 Project Structure
+## 🏛️ System Architecture
 
-```
-CyberShield/
-├── client/                          # React Frontend
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── common/              # Reusable UI (StatsCard, StatusBadge, etc.)
-│   │   │   └── layout/              # DashboardLayout with sidebar navigation
-│   │   ├── context/
-│   │   │   └── AuthContext.jsx      # Auth state, login/register/logout
-│   │   ├── pages/
-│   │   │   ├── auth/                # Login & Register pages
-│   │   │   ├── citizen/             # Dashboard, FileComplaint, TrackComplaint, etc.
-│   │   │   ├── investigator/        # Dashboard, CaseDetail, AssignedCases
-│   │   │   └── admin/               # Dashboard, ManageUsers, AllComplaints
-│   │   ├── services/
-│   │   │   └── api.js               # Axios instance with JWT interceptors
-│   │   ├── App.jsx                  # React Router with ProtectedRoute
-│   │   └── index.css                # Tailwind CSS base styles
-│   ├── vite.config.js
-│   └── package.json
-│
-├── server/                          # Express Backend
-│   ├── config/
-│   │   └── db.js                    # MongoDB connection
-│   ├── controllers/
-│   │   ├── authController.js        # Register, login, profile
-│   │   ├── complaintController.js   # CRUD, tracking, status updates
-│   │   ├── investigationController.js # Notes, priority, messaging
-│   │   ├── adminController.js       # Users, assignment, stats, reports
-│   │   └── notificationController.js # Get, mark read
-│   ├── middleware/
-│   │   ├── authMiddleware.js        # JWT verification + RBAC
-│   │   └── errorMiddleware.js       # Global error handler
-│   ├── models/
-│   │   ├── User.js                  # Roles, bcrypt hashing
-│   │   ├── Complaint.js             # Tracking ID, status lifecycle
-│   │   ├── Evidence.js              # File metadata, MIME validation
-│   │   ├── Investigation.js         # Embedded notes & communications
-│   │   └── Notification.js          # TTL auto-cleanup
-│   ├── routes/                      # 5 route modules
-│   ├── utils/
-│   │   ├── generateToken.js         # JWT generation
-│   │   └── generateTrackingId.js    # CS-YYYY-XXXXXX format
-│   ├── server.js                    # Entry point
-│   └── package.json
-│
-├── docs/                            # Project Documentation
-│   ├── SRS.md                       # Software Requirements Specification
-│   ├── architecture.md              # System Architecture & API Design
-│   ├── database_schema.md           # MongoDB Schema Design
-│   └── wireframes.md                # UI/UX Design System
-│
-├── .env.example                     # Environment variables template
-├── .gitignore
-└── README.md
+```mermaid
+flowchart TD
+    subgraph ClientLayer["Frontend (React 19 + Vite + Tailwind CSS)"]
+        Landing["Animated Landing Page"]
+        CitizenPortal["Citizen Dashboard & Complaint Form"]
+        InvestigatorPortal["Investigator Dashboard & Case Notes"]
+        AdminPortal["Admin Analytics Center (Recharts)"]
+        Scanner["URL Threat Scanner (/tools/url-scanner)"]
+        ChatbotWidget["11-Language AI Chatbot Widget"]
+    end
+
+    subgraph APILayer["Backend (Express 4 REST API)"]
+        AuthMiddleware["JWT Authentication & RBAC Middleware"]
+        AuthRoute["/api/auth (Login, Register, Profile)"]
+        ComplaintRoute["/api/complaints (CRUD, PDF Export)"]
+        InvestRoute["/api/investigations (Notes, Timeline)"]
+        AdminRoute["/api/admin (Stats, User Management)"]
+        AIRoute["/api/ai (Classify, URL Scan, Multilingual Chat)"]
+        PDFGen["PDFKit Generator (/api/complaints/:id/pdf)"]
+    end
+
+    subgraph ExternalLayer["Database & AI Services"]
+        MongoDB[("MongoDB (Mongoose Schemas)")]
+        GeminiAI["Google Gemini 3.8 Flash (NLP Engine)"]
+    end
+
+    ClientLayer --> AuthMiddleware
+    AuthMiddleware --> APILayer
+    APILayer --> MongoDB
+    AIRoute --> GeminiAI
+    ComplaintRoute --> PDFGen
 ```
 
 ---
 
-## 🚀 Getting Started
+## 👥 4-Member Team Role Division (Presentation Ready)
 
-### Prerequisites
-
-| Requirement | Version |
-|---|---|
-| **Node.js** | v18 or higher |
-| **MongoDB** | v6+ (local) or MongoDB Atlas |
-| **npm** | v9+ |
-| **Git** | Latest |
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/muqeetbuilds/CyberShield.git
-cd CyberShield
-```
-
-### 2. Set Up Environment Variables
-
-```bash
-# Navigate to the server directory
-cd server
-
-# Copy the environment template
-cp ../.env.example .env
-
-# Edit .env with your values (MongoDB URI, JWT secret, etc.)
-```
-
-Your `.env` should look like:
-
-```env
-NODE_ENV=development
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/cybershield
-JWT_SECRET=your_secure_jwt_secret
-JWT_EXPIRE=24h
-CLIENT_URL=http://localhost:5173
-ENCRYPTION_KEY=your_32_character_key
-```
-
-### 3. Install Dependencies
-
-```bash
-# Install backend dependencies
-cd server
-npm install
-
-# Install frontend dependencies
-cd ../client
-npm install
-```
-
-### 4. Seed the Database (Optional)
-
-```bash
-cd server
-npm run seed
-```
-
-This creates demo accounts for all three roles.
-
-### 5. Run the Application
-
-Open **two terminals**:
-
-```bash
-# Terminal 1 — Start the backend (port 5000)
-cd server
-npm run dev
-
-# Terminal 2 — Start the frontend (port 5173)
-cd client
-npm run dev
-```
-
-### 6. Open in Browser
-
-Navigate to **http://localhost:5173**
+| Member | Focus Area | Key Responsibilities & Code Delivered |
+|---|---|---|
+| **Member 1** | **Frontend Engineering & UI/UX** | Built React 19 UI, Framer Motion Landing Page, Recharts visual analytics, multi-step complaint forms, and responsive navigation layouts across 3 dashboards. |
+| **Member 2** | **Backend & AI Architecture** | Express REST APIs, Google Gemini 3.8 Flash integration (`aiController.js`), multi-model fallback engine, phishing URL scanner, and multilingual chatbot engine. |
+| **Member 3** | **Database & PDF Reporting** | MongoDB database design, Mongoose models, data indexing optimization, seeder script, and automated PDF document generation using `pdfkit`. |
+| **Member 4** | **Auth, Security & Operations** | JWT authentication, bcrypt password hashing, RBAC (Citizen/Investigator/Admin), CORS/Helmet headers, rate limiting, and the root `start.bat` deployment automation. |
 
 ---
 
 ## 🔑 Demo Credentials
 
-| Role | Email | Password |
-|---|---|---|
-| 🛡️ Admin | `admin@cybershield.com` | `Admin@123` |
-| 🔍 Investigator | `investigator@cybershield.com` | `Invest@123` |
-| 👤 Citizen | `citizen@cybershield.com` | `Citizen@123` |
-
-> **Note:** Run `npm run seed` in the `server` directory first to create these accounts.
+| Role | Email | Password | Permissions |
+|---|---|---|---|
+| **Citizen** | `citizen@demo.com` | `password123` | File complaints, AI auto-classify, download PDF, chat |
+| **Investigator** | `investigator@demo.com` | `password123` | Manage assigned cases, add notes, update status, export PDF |
+| **Admin** | `admin@demo.com` | `password123` | System analytics charts, user management, complaint assignment |
 
 ---
 
-## 📡 API Reference
+## ⚡ Quick Start Guide
 
-**Base URL:** `http://localhost:5000/api`
+### Prerequisites
+- **Node.js** (v18 or higher)
+- **MongoDB** running locally (`mongodb://localhost:27017/cybershield`)
 
-### Authentication
-
-| Method | Endpoint | Description | Access |
-|---|---|---|---|
-| `POST` | `/auth/register` | Register a new citizen account | Public |
-| `POST` | `/auth/login` | Login & get JWT token | Public |
-| `GET` | `/auth/profile` | Get current user profile | Private |
-| `PUT` | `/auth/profile` | Update user profile | Private |
-
-### Complaints
-
-| Method | Endpoint | Description | Access |
-|---|---|---|---|
-| `POST` | `/complaints` | File a new complaint | Citizen |
-| `GET` | `/complaints` | Get all complaints (filtered by role) | Private |
-| `GET` | `/complaints/:id` | Get complaint details | Private |
-| `GET` | `/complaints/track/:trackingId` | Track complaint by Tracking ID | Citizen |
-| `PUT` | `/complaints/:id` | Update a complaint | Citizen |
-| `PUT` | `/complaints/:id/status` | Update complaint status | Investigator / Admin |
-
-### Investigation
-
-| Method | Endpoint | Description | Access |
-|---|---|---|---|
-| `GET` | `/investigations/:complaintId` | Get investigation details | Private |
-| `POST` | `/investigations/:complaintId/notes` | Add investigation note | Investigator |
-| `PUT` | `/investigations/:complaintId/priority` | Update case priority | Investigator |
-| `POST` | `/investigations/:complaintId/communicate` | Send a message | Investigator / Citizen |
-
-### Admin
-
-| Method | Endpoint | Description | Access |
-|---|---|---|---|
-| `GET` | `/admin/users` | Get all users | Admin |
-| `POST` | `/admin/users` | Create a new user | Admin |
-| `PUT` | `/admin/users/:id` | Update a user | Admin |
-| `DELETE` | `/admin/users/:id` | Delete a user | Admin |
-| `PUT` | `/admin/complaints/:id/assign` | Assign investigator to case | Admin |
-| `GET` | `/admin/stats` | Get system-wide statistics | Admin |
-| `GET` | `/admin/reports` | Generate reports | Admin |
-
-### Notifications
-
-| Method | Endpoint | Description | Access |
-|---|---|---|---|
-| `GET` | `/notifications` | Get user notifications | Private |
-| `PUT` | `/notifications/:id/read` | Mark notification as read | Private |
-| `PUT` | `/notifications/read-all` | Mark all as read | Private |
-
----
-
-## 🔒 Security Features
-
-- **JWT Authentication** — Stateless token-based auth with configurable expiry
-- **Password Hashing** — bcryptjs with salt rounds
-- **Role-Based Access Control (RBAC)** — Middleware-level role enforcement
-- **Helmet** — HTTP security headers (XSS protection, content security policy)
-- **Rate Limiting** — Prevents brute-force attacks on auth endpoints
-- **Input Validation** — express-validator on all API inputs
-- **CORS** — Configured origin restrictions
-- **Data Encryption** — Sensitive fields encrypted at rest
-
----
-
-## 📊 Complaint Lifecycle
-
+### Option A: One-Click Launch (Recommended)
+Double-click **`start.bat`** in the project root:
 ```
-  ┌──────────┐     ┌──────────────┐     ┌──────────┐     ┌─────────────────────┐     ┌──────────┐
-  │Submitted │────▶│ Under Review │────▶│ Assigned │────▶│ Under Investigation │────▶│ Resolved │
-  └──────────┘     └──────────────┘     └──────────┘     └─────────────────────┘     └──────────┘
-                          │                                                               │
-                          ▼                                                               ▼
-                     ┌──────────┐                                                    ┌──────────┐
-                     │ Rejected │                                                    │  Closed  │
-                     └──────────┘                                                    └──────────┘
+C:\Users\Lenovo\OneDrive\Desktop\Dokumen\cybershield\start.bat
+```
+This automatically launches both backend (port 5000) and frontend (port 5173) in separate windows.
+
+### Option B: Manual Terminal Launch
+```bash
+# Terminal 1: Backend
+cd server
+npm run dev
+
+# Terminal 2: Frontend
+cd client
+npm run dev
 ```
 
-### Crime Categories
-
-| Category | Icon |
-|---|---|
-| Financial Fraud | 💰 |
-| Identity Theft | 🆔 |
-| Online Harassment / Cyberbullying | 😤 |
-| Phishing / Social Engineering | 🎣 |
-| Ransomware / Malware Attack | 🦠 |
-| Data Breach | 📂 |
-| Online Scam | 🕵️ |
-| Other | 📋 |
+Open your browser at: **`http://localhost:5173`**
 
 ---
 
-## 📄 Documentation
+## 🎤 Presentation & Viva Q&A Cheat Sheet
 
-Detailed project documentation is available in the [`docs/`](./docs) directory:
+### Q1: "How is this project different from traditional complaint portals?"
+> *"Traditional portals are passive record-keepers. CyberShield acts as an active intelligence layer. It uses Google Gemini 3.8 Flash to auto-classify cybercrime types and calculate threat severity scores upon submission, provides real-time phishing URL risk scanning, speaks 11 Indian regional languages to assist non-English speakers, and produces court-admissible PDF incident reports."*
 
-| Document | Description |
-|---|---|
-| [SRS.md](./docs/SRS.md) | Software Requirements Specification — 43 functional & 12 non-functional requirements |
-| [architecture.md](./docs/architecture.md) | System architecture, component diagrams, API design, auth flow |
-| [database_schema.md](./docs/database_schema.md) | MongoDB collections, ER diagram, indexing strategy |
-| [wireframes.md](./docs/wireframes.md) | Design system, page layouts, responsive breakpoints |
+### Q2: "What happens if the Google Gemini API has a high-demand spike or outage?"
+> *"We engineered an automatic multi-model fallback pipeline that tries Gemini 3.8 Flash, Gemini Flash Latest, and Gemini 2.5 Flash Lite. Furthermore, we implemented a local cybersecurity knowledge base so the portal continues to deliver emergency response steps (1930 helpline, bank freeze protocols) with 100% uptime even if external APIs are unreachable."*
 
----
-
-## 👥 User Roles
-
-| Role | Dashboard | Key Capabilities |
-|---|---|---|
-| **Citizen** | Citizen Portal | File complaints, upload evidence, track cases, receive notifications |
-| **Investigator** | Case Workspace | Manage assigned cases, add notes, update status/priority, communicate with victims |
-| **Admin** | Admin Panel | User management, assign investigators, analytics, system oversight |
+### Q3: "How is user data and role separation enforced?"
+> *"Every API route is guarded by JWT authentication middleware and Role-Based Access Control (RBAC). Citizens can only view and export their own complaints, investigators access only assigned cases, and administrators have control over system analytics and user management."*
 
 ---
 
-## 🛣️ Roadmap
-
-- [ ] Deploy frontend to **Vercel**
-- [ ] Deploy backend to **Render**
-- [ ] Migrate to **MongoDB Atlas** for cloud database
-- [ ] Add unit tests with **Jest** and **React Testing Library**
-- [ ] Integrate Python ML microservice for auto-categorization of complaints
-- [ ] Add Socket.io for real-time push notifications
-- [ ] Email notifications via Nodemailer integration
-
----
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome!
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📝 License
-
-This project is licensed under the **ISC License**.
-
----
-
-## 👨‍💻 Author
-
-**Abdul Muqeet**
-Final Year Student
-
-[![GitHub](https://img.shields.io/badge/GitHub-muqeetbuilds-181717?style=flat-square&logo=github)](https://github.com/muqeetbuilds)
-
----
-
-<p align="center">
-  <em>"Empowering citizens. Enabling justice. One complaint at a time."</em>
-</p>
+## 📜 License
+Developed as an Advanced Capstone Project by Peeyoosh Kangle & Team (2026).

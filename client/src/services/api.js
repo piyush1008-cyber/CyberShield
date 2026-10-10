@@ -52,6 +52,7 @@ export const complaintAPI = {
   track: (trackingId) => api.get(`/complaints/track/${trackingId}`),
   update: (id, data) => api.put(`/complaints/${id}`, data),
   updateStatus: (id, data) => api.put(`/complaints/${id}/status`, data),
+  downloadPDF: (id) => api.get(`/complaints/${id}/pdf`, { responseType: 'blob' }),
 };
 
 // ============ INVESTIGATION APIs ============
@@ -78,6 +79,13 @@ export const notificationAPI = {
   getAll: (params) => api.get('/notifications', { params }),
   markAsRead: (id) => api.put(`/notifications/${id}/read`),
   markAllAsRead: () => api.put('/notifications/read-all'),
+};
+
+// ============ AI APIs ============
+export const aiAPI = {
+  classify: (data) => api.post('/ai/classify', data),
+  scanURL: (data) => api.post('/ai/scan-url', data),
+  chat: (data) => api.post('/ai/chat', data),
 };
 
 export default api;

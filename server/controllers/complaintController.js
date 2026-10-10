@@ -236,11 +236,40 @@ const updateComplaintStatus = async (req, res, next) => {
   }
 };
 
+// @desc    Download complaint PDF receipt
+// @route   GET /api/complaints/:id/pdf
+// @access  Private
+const downloadComplaintPDF = async (req, res, next) => {
+  try {
+    const { generateComplaintPDF } = require('../utils/pdfGenerator');
+    const complaint = await Complaint.findById(req.params.id)
+      .populate('citizenId', 'name email phone')
+      .populate('assignedTo', 'name email phone role');
+
+    if (!complaint) {
+      return res.status(404).json({ success: false, message: 'Complaint not found' });
+    }
+
+    // Role verification: citizen can only download own complaint, admin/investigator can download any
+    if (req.user.role === 'citizen' && complaint.citizenId._id.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: 'Access denied' });
+    }
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=CyberShield_${complaint.trackingId}.pdf`);
+
+    generateComplaintPDF(complaint, res);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createComplaint,
   getComplaints,
   getComplaintById,
   trackComplaint,
   updateComplaint,
-  updateComplaintStatus
+  updateComplaintStatus,
+  downloadComplaintPDF
 };

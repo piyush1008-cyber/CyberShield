@@ -7,11 +7,15 @@ const {
   getComplaintById,
   trackComplaint,
   updateComplaint,
-  updateComplaintStatus
+  updateComplaintStatus,
+  downloadComplaintPDF
 } = require('../controllers/complaintController');
 
 // All routes require authentication
 router.use(protect);
+
+// PDF Download (Citizens, Investigators, Admins)
+router.get('/:id/pdf', downloadComplaintPDF);
 
 // Citizen routes
 router.post('/', authorize('citizen'), createComplaint);

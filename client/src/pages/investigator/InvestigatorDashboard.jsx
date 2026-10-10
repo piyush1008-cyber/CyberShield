@@ -7,6 +7,7 @@ import CaseDetail from './CaseDetail';
 const investigatorNav = [
   { path: '/investigator/dashboard', label: 'Dashboard', icon: 'home', end: true },
   { path: '/investigator/cases', label: 'My Cases', icon: 'folder' },
+  { path: '/tools/url-scanner', label: 'AI URL Scanner', icon: 'search' },
   { path: '/investigator/messages', label: 'Messages', icon: 'chat' },
 ];
 

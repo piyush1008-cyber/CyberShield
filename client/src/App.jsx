@@ -8,6 +8,9 @@ import {
   InvestigatorDashboard,
   AdminDashboard
 } from './pages';
+import LandingPage from './pages/LandingPage';
+import URLScanner from './pages/tools/URLScanner';
+import ChatBot from './components/ChatBot';
 import './index.css';
 
 // Protected Route component
@@ -111,8 +114,11 @@ function App() {
             }
           />
 
+          {/* Public Tools */}
+          <Route path="/tools/url-scanner" element={<URLScanner />} />
+
           {/* Default redirect */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<LandingPage />} />
 
           {/* 404 */}
           <Route
@@ -130,6 +136,7 @@ function App() {
             }
           />
         </Routes>
+        <ChatBot />
       </Router>
     </AuthProvider>
   );

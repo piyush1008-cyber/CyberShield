@@ -12,6 +12,7 @@ const citizenNav = [
   { path: '/citizen/file-complaint', label: 'File Complaint', icon: 'document' },
   { path: '/citizen/my-complaints', label: 'My Complaints', icon: 'clipboard' },
   { path: '/citizen/track', label: 'Track Complaint', icon: 'search' },
+  { path: '/tools/url-scanner', label: 'AI URL Scanner', icon: 'search' },
   { path: '/citizen/notifications', label: 'Notifications', icon: 'bell' },
 ];
 
