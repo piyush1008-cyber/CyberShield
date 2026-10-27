@@ -124,7 +124,7 @@ flowchart TD
 ### Option A: One-Click Launch (Recommended)
 Double-click **`start.bat`** in the project root:
 ```
-C:\Users\Lenovo\OneDrive\Desktop\Dokumen\cybershield\start.bat
+.\start.bat
 ```
 This automatically launches both backend (port 5000) and frontend (port 5173) in separate windows.
 

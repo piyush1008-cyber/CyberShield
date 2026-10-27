@@ -188,6 +188,59 @@ const URLScanner = () => {
                 </div>
               </div>
 
+              {/* UCI ML Pipeline Feature Vector Breakdown */}
+              {result.ml_features && (
+                <div className="bg-slate-800/40 border border-indigo-500/20 rounded-xl p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-white font-semibold flex items-center gap-2">
+                      <span>🧬</span>
+                      <span>UCI ML Pipeline Feature Breakdown</span>
+                    </h3>
+                    <span className="text-xs text-indigo-400 bg-indigo-500/10 border border-indigo-500/30 px-2.5 py-0.5 rounded-full font-mono">
+                      AIML Feature Extractor
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+                    <div className="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                      <span className="text-slate-400 block mb-1">IP Address Host</span>
+                      <span className={result.ml_features.usingIP ? 'text-red-400 font-semibold' : 'text-emerald-400'}>
+                        {result.ml_features.usingIP ? 'IP Address Detected' : 'Domain Name (Clean)'}
+                      </span>
+                    </div>
+                    <div className="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                      <span className="text-slate-400 block mb-1">URL Length Classification</span>
+                      <span className={result.ml_features.urlLengthStatus === 'Phishing' ? 'text-red-400 font-semibold' : (result.ml_features.urlLengthStatus === 'Suspicious' ? 'text-amber-400' : 'text-emerald-400')}>
+                        {result.ml_features.urlLength} chars ({result.ml_features.urlLengthStatus})
+                      </span>
+                    </div>
+                    <div className="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                      <span className="text-slate-400 block mb-1">Shortening Service</span>
+                      <span className={result.ml_features.isShortened ? 'text-amber-400 font-semibold' : 'text-emerald-400'}>
+                        {result.ml_features.isShortened ? 'Shortened URL' : 'Direct Link'}
+                      </span>
+                    </div>
+                    <div className="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                      <span className="text-slate-400 block mb-1">Prefix / Suffix (-)</span>
+                      <span className={result.ml_features.hasHyphen ? 'text-amber-400 font-semibold' : 'text-emerald-400'}>
+                        {result.ml_features.hasHyphen ? 'Hyphen in Host' : 'None'}
+                      </span>
+                    </div>
+                    <div className="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                      <span className="text-slate-400 block mb-1">HTTPS / TLS Security</span>
+                      <span className={result.ml_features.isHttps ? 'text-emerald-400' : 'text-red-400 font-semibold'}>
+                        {result.ml_features.isHttps ? 'HTTPS Encrypted' : 'Insecure HTTP'}
+                      </span>
+                    </div>
+                    <div className="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                      <span className="text-slate-400 block mb-1">TLD Reputation</span>
+                      <span className={result.ml_features.hasSuspiciousTLD ? 'text-red-400 font-semibold' : 'text-emerald-400'}>
+                        {result.ml_features.hasSuspiciousTLD ? 'Disposable / High-Risk' : 'Standard TLD'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Recommendation */}
               <div className="bg-slate-800/40 border border-slate-700/30 rounded-xl p-5">
                 <h3 className="text-white font-semibold mb-2">💡 Recommendation</h3>

@@ -208,7 +208,8 @@ const getStats = async (req, res, next) => {
       totalComplaints,
       complaintsByStatus,
       complaintsByCategory,
-      recentComplaints
+      recentComplaints,
+      monthlyRaw
     ] = await Promise.all([
       User.countDocuments(),
       User.countDocuments({ role: 'citizen' }),
@@ -223,8 +224,30 @@ const getStats = async (req, res, next) => {
       Complaint.find()
         .sort({ createdAt: -1 })
         .limit(5)
-        .populate('citizenId', 'name')
+        .populate('citizenId', 'name'),
+      Complaint.aggregate([
+        {
+          $group: {
+            _id: {
+              year: { $year: '$createdAt' },
+              month: { $month: '$createdAt' }
+            },
+            complaints: { $sum: 1 },
+            resolved: {
+              $sum: { $cond: [{ $eq: ['$status', 'Resolved'] }, 1, 0] }
+            }
+          }
+        },
+        { $sort: { '_id.year': 1, '_id.month': 1 } }
+      ])
     ]);
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthlyTrends = (monthlyRaw || []).map(item => ({
+      month: monthNames[(item._id.month - 1) % 12],
+      complaints: item.complaints,
+      resolved: item.resolved
+    }));
 
     res.status(200).json({
       success: true,
@@ -235,7 +258,8 @@ const getStats = async (req, res, next) => {
           byStatus: complaintsByStatus,
           byCategory: complaintsByCategory
         },
-        recentComplaints
+        recentComplaints,
+        monthlyTrends
       }
     });
   } catch (error) {

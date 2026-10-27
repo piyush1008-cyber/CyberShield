@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import {
+  LandingPage,
   LoginPage,
   RegisterPage,
   CitizenDashboard,
@@ -76,7 +77,11 @@ function App() {
         />
 
         <Routes>
-          {/* Public Routes */}
+          {/* Public Landing & Tools */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/tools/url-scanner" element={<URLScanner />} />
+
+          {/* Auth Routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
@@ -112,12 +117,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          {/* Public Tools */}
-          <Route path="/tools/url-scanner" element={<URLScanner />} />
-
-          {/* Default redirect */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
 
           {/* 404 */}
           <Route

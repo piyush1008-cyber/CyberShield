@@ -2,7 +2,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-const MODELS_TO_TRY = ['gemini-3.8-flash', 'gemini-flash-latest', 'gemini-2.5-flash-lite', 'gemini-2.5-flash'];
+const MODELS_TO_TRY = ['gemini-3.8-flash', 'gemini-flash-latest', 'gemini-2.5-flash-lite', 'gemini-2.5-flash', 'gemini-1.5-flash'];
 
 /**
  * Helper to generate content with model fallback
@@ -116,6 +116,128 @@ Respond with this exact JSON structure:
 // ─────────────────────────────────────────────────────────────
 // 2. Phishing URL Threat Scanner
 // ─────────────────────────────────────────────────────────────
+
+/**
+ * UCI Phishing Websites (30 Features) URL Attribute Extractor
+ * Corresponds to the AIML feature engineering pipeline in phishing_analysis.ipynb
+ */
+function extractMLFeatures(rawUrl) {
+  let url = (rawUrl || '').trim();
+  if (!/^https?:\/\//i.test(url)) {
+    url = 'http://' + url;
+  }
+
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    parsed = { hostname: rawUrl, pathname: '', protocol: 'http:', port: '' };
+  }
+
+  const hostname = (parsed.hostname || rawUrl).toLowerCase();
+  const fullUrl = rawUrl.toLowerCase();
+
+  // 1. Using IP Address
+  const ipPattern = /(^|\/\/)((\d{1,3}\.){3}\d{1,3}|\[[0-9a-fA-F:]+\])/;
+  const usingIP = ipPattern.test(rawUrl);
+
+  // 2. Long URL (>75 Phishing, 54-75 Suspicious, <54 Legitimate)
+  const urlLength = rawUrl.length;
+  const urlLengthStatus = urlLength > 75 ? 'Phishing' : (urlLength >= 54 ? 'Suspicious' : 'Legitimate');
+
+  // 3. URL Shortening Services
+  const shorteners = ['bit.ly', 'tinyurl.com', 'goo.gl', 'ow.ly', 't.co', 'is.gd', 'buff.ly', 'adf.ly', 'cutt.ly', 'rebrand.ly'];
+  const isShortened = shorteners.some(s => hostname.includes(s));
+
+  // 4. Symbol @ in URL
+  const hasAtSymbol = rawUrl.includes('@');
+
+  // 5. Redirecting // in path
+  const doubleSlashRedirect = rawUrl.indexOf('//', 8) > -1;
+
+  // 6. Prefix / Suffix (-) in domain
+  const hasHyphen = hostname.includes('-');
+
+  // 7. Subdomains count
+  const parts = hostname.replace(/^www\./, '').split('.');
+  const subDomainCount = Math.max(0, parts.length - 2);
+
+  // 8. HTTPS in protocol
+  const isHttps = parsed.protocol === 'https:' || rawUrl.startsWith('https://');
+
+  // 9. Non-standard port
+  const nonStandardPort = !!(parsed.port && !['80', '443'].includes(parsed.port));
+
+  // 10. High-risk disposable TLDs
+  const suspiciousTLDs = ['.xyz', '.top', '.work', '.club', '.info', '.click', '.loan', '.zip', '.tk', '.ml', '.ga', '.cf', '.gq', '.rest'];
+  const hasSuspiciousTLD = suspiciousTLDs.some(tld => hostname.endsWith(tld));
+
+  // 11. Sensitive keywords (credential harvesting)
+  const keywords = ['login', 'verify', 'bank', 'secure', 'account', 'update', 'kyc', 'otp', 'free', 'reward', 'gift', 'support', 'claim'];
+  const detectedKeywords = keywords.filter(k => fullUrl.includes(k));
+
+  // Compute ML feature score & threat vector
+  let heuristicScore = 12;
+  const detectedThreats = [];
+
+  if (usingIP) {
+    heuristicScore += 30;
+    detectedThreats.push('URL utilizes numerical IP directly instead of authenticated domain');
+  }
+  if (isShortened) {
+    heuristicScore += 18;
+    detectedThreats.push('Shortened URL masks final redirect destination');
+  }
+  if (hasHyphen) {
+    heuristicScore += 15;
+    detectedThreats.push('Domain contains hyphen (-) frequently used in typosquatting / brand impersonation');
+  }
+  if (hasAtSymbol) {
+    heuristicScore += 25;
+    detectedThreats.push('Contains "@" character used to mislead browser URL parser');
+  }
+  if (doubleSlashRedirect) {
+    heuristicScore += 20;
+    detectedThreats.push('Suspicious double slash (//) redirect pattern in path');
+  }
+  if (hasSuspiciousTLD) {
+    heuristicScore += 22;
+    detectedThreats.push('High-risk disposable top-level domain (TLD)');
+  }
+  if (!isHttps) {
+    heuristicScore += 15;
+    detectedThreats.push('Unencrypted transmission (Missing HTTPS TLS certificate)');
+  }
+  if (detectedKeywords.length > 0) {
+    heuristicScore += Math.min(25, detectedKeywords.length * 10);
+    detectedThreats.push(`Credential harvesting lure keywords detected: ${detectedKeywords.join(', ')}`);
+  }
+  if (urlLength > 75) {
+    heuristicScore += 10;
+    detectedThreats.push(`Abnormally long URL structure (${urlLength} characters)`);
+  }
+
+  heuristicScore = Math.min(98, Math.max(8, heuristicScore));
+
+  return {
+    hostname,
+    usingIP,
+    urlLength,
+    urlLengthStatus,
+    isShortened,
+    hasAtSymbol,
+    doubleSlashRedirect,
+    hasHyphen,
+    subDomainCount,
+    isHttps,
+    nonStandardPort,
+    hasSuspiciousTLD,
+    detectedKeywords,
+    heuristicScore,
+    detectedThreats
+  };
+}
+
 const scanURL = async (req, res) => {
   try {
     const { url } = req.body;
@@ -123,8 +245,12 @@ const scanURL = async (req, res) => {
       return res.status(400).json({ success: false, message: 'URL is required' });
     }
 
-    const prompt = `You are a cybersecurity URL threat analyzer. Analyze this URL for potential phishing, malware, or social engineering threats.
+    const mlFeatures = extractMLFeatures(url);
+
+    const prompt = `You are a cybersecurity URL threat analyzer for CyberShield. Analyze this URL for phishing, malware, or social engineering threats.
 URL: ${url}
+Extracted UCI Machine Learning URL Features:
+${JSON.stringify(mlFeatures, null, 2)}
 
 Respond ONLY with valid JSON (no markdown, no code blocks):
 {
@@ -147,28 +273,37 @@ Respond ONLY with valid JSON (no markdown, no code blocks):
     try {
       text = await generateWithFallback(prompt);
     } catch (apiErr) {
-      console.warn('Using local URL analyzer fallback due to Google API demand spike:', apiErr.message);
-      const urlLower = url.toLowerCase();
-      const isSuspicious = urlLower.includes('fake') || urlLower.includes('verify') || urlLower.includes('login') || urlLower.includes('secure') || urlLower.includes('.xyz') || urlLower.includes('.top') || urlLower.includes('free');
-      const domainMatch = url.match(/:\/\/(www\.)?([^/]+)/);
-      const domain = domainMatch ? domainMatch[2] : url;
+      console.warn('Using local ML-feature URL analyzer fallback due to API demand spike:', apiErr.message);
+      const isSuspicious = mlFeatures.heuristicScore >= 45;
+      const riskLevel = mlFeatures.heuristicScore >= 75
+        ? 'Critical'
+        : (mlFeatures.heuristicScore >= 50
+            ? 'Dangerous'
+            : (mlFeatures.heuristicScore >= 30 ? 'Suspicious' : 'Low Risk'));
 
       return res.json({
         success: true,
         data: {
           url: url,
-          risk_level: isSuspicious ? 'Dangerous' : 'Low Risk',
-          risk_score: isSuspicious ? 88 : 15,
+          risk_level: riskLevel,
+          risk_score: mlFeatures.heuristicScore,
           is_phishing: isSuspicious,
-          is_malware: isSuspicious,
-          threats_detected: isSuspicious ? ['Suspected Credential Harvesting', 'Untrusted High-Risk Domain TLD'] : ['No immediate blacklisted patterns detected'],
+          is_malware: mlFeatures.usingIP || mlFeatures.hasSuspiciousTLD,
+          threats_detected: mlFeatures.detectedThreats.length > 0
+            ? mlFeatures.detectedThreats
+            : ['No immediate blacklisted patterns detected'],
           domain_analysis: {
-            domain: domain,
-            is_typosquatting: isSuspicious,
-            suspicious_patterns: isSuspicious ? ['Keywords mimicking institutional portal', 'Suspicious URL structure'] : ['Standard domain format']
+            domain: mlFeatures.hostname,
+            is_typosquatting: mlFeatures.hasHyphen || mlFeatures.isShortened,
+            suspicious_patterns: mlFeatures.detectedThreats
           },
-          recommendation: isSuspicious ? 'DO NOT click or enter credentials on this link.' : 'The domain shows no immediate red flags, but always verify sender authenticity.',
-          details: isSuspicious ? 'URL heuristics identified deceptive keywords and high-risk domain structure commonly found in phishing campaigns.' : 'Domain analyzed with no active phishing vectors detected.'
+          ml_features: mlFeatures,
+          recommendation: isSuspicious
+            ? 'DO NOT click or enter credentials on this link.'
+            : 'The domain shows no immediate red flags, but always verify sender authenticity.',
+          details: isSuspicious
+            ? 'URL analysis identified deceptive keywords and high-risk domain patterns commonly found in phishing campaigns.'
+            : 'Domain analyzed with no active phishing vectors detected.'
         }
       });
     }
@@ -179,98 +314,11 @@ Respond ONLY with valid JSON (no markdown, no code blocks):
     }
 
     const scanResult = JSON.parse(cleaned);
+    scanResult.ml_features = mlFeatures;
     res.json({ success: true, data: scanResult });
   } catch (error) {
     console.error('URL Scan Error:', error);
     res.status(500).json({ success: false, message: 'URL scan failed', error: error.message });
-  }
-};
-
-// ─────────────────────────────────────────────────────────────
-// 3. Multi-Lingual Indian AI Chatbot
-// ─────────────────────────────────────────────────────────────
-const LOCAL_KNOWLEDGE = {
-  Hindi: {
-    upi: 'यदि UPI या बैंक खाते से अनधिकृत पैसे कटे हैं, तो तुरंत अपने बैंक से संपर्क करके खाता फ्रीज करवाएं। इसके बाद तुरंत 1930 राष्ट्रीय साइबर हेल्पलाइन पर कॉल करें और CyberShield पोर्टल पर शिकायत दर्ज करें।',
-    phishing: 'फिशिंग एक ऐसा साइबर हमला है जिसमें धोखेबाज फर्जी SMS, ईमेल या लिंक भेजकर आपके बैंक पासवर्ड, OTP या व्यक्तिगत जानकारी चुराने का प्रयास करते हैं। किसी भी अनजान लिंक पर क्लिक न करें।',
-    complaint: 'CyberShield पर शिकायत दर्ज करने के लिए ऊपर दिए गए "File Complaint" पर जाएं, घटना का विवरण लिखें, और "AI Classify" दबाएं। सिस्टम अपने आप आपकी शिकायत का प्रकार पहचान लेगा।',
-    helpline: '1930 भारत सरकार के गृह मंत्रालय (MHA) की राष्ट्रीय साइबर वित्तीय धोखाधड़ी हेल्पलाइन है। पैसे कटने के 24 घंटे के अंदर इस पर तुरंत कॉल करें।',
-    default: 'नमस्ते! मैं CyberShield AI हूँ। आप मुझसे ऑनलाइन फ्रॉड, UPI धोखाधड़ी, फ़िशिंग या शिकायत दर्ज करने से जुड़ा कोई भी सवाल पूछ सकते हैं। आपात स्थिति में तुरंत 1930 पर कॉल करें।'
-  },
-  Marathi: {
-    upi: 'जर आपल्या खात्यातून अनधिकृत पैसे गेले असतील तर त्वरित बँकेशी संपर्क साधून खाते ब्लॉक करा. त्यानंतर लगेच १९३० राष्ट्रीय सायबर हेल्पलाइनवर कॉल करा आणि CyberShield वर तक्रार नोंदवा.',
-    phishing: 'फिशिंग म्हणजे बनावट लिंक्स, मेसेज किंवा ईमेल पाठवून पासवर्ड आणि ओटीपी चोरण्याचा सायबर गुन्हा आहे. संशयास्पद लिंकवर कधीही क्लिक करू नका.',
-    complaint: 'तक्रार नोंदवण्यासाठी CyberShield वरील "File Complaint" मेनूवर जा, माहिती भरा आणि "AI Classify" बटणावर क्लिक करा.',
-    helpline: '१९३० ही गृह मंत्रालयाची अधिकृत राष्ट्रीय सायबर हेल्पलाइन आहे. सायबर फसवणूक झाल्यावर त्वरित या नंबरवर संपर्क साधा.',
-    default: 'नमस्कार! मी CyberShield AI आहे. सायबर गुन्हे, ऑनलाइन फसवणूक किंवा तक्रारीसंदर्भात मी आपल्याला मदत करू शकतो. आपत्कालीन मदतीसाठी १९३० वर संपर्क साधा.'
-  },
-  Hinglish: {
-    upi: 'Agar account se unauthorized paise cut gaye hain, to turant bank ko call karke account freeze karayein. Fir national cyber helpline 1930 par call karein aur CyberShield par complaint file karein.',
-    phishing: 'Phishing ek aisi trick hai jisme scammers fake SMS ya link bhejkar aapka OTP ya password chura lete hain. Kabhi bhi suspicious link par click na karein.',
-    complaint: 'CyberShield par complaint file karne ke liye "File Complaint" par jayein, details likhein aur "AI Classify" button click karein.',
-    helpline: '1930 Indian Government ki official National Cyber Fraud Helpline hai. Financial fraud hone par 24 hours ke andar call karna zaroori hai.',
-    default: 'Hello! Main CyberShield AI hoon. UPI fraud, phishing, fake calls ya complaint filing ke baare mein kuch bhi poochiye!'
-  },
-  English: {
-    upi: 'If money was debited fraudulently, immediately contact your bank to freeze the account/card. Then call the National Cyber Crime Helpline 1930 right away and register your complaint on CyberShield.',
-    phishing: 'Phishing is a deceptive technique where attackers send fraudulent links or SMS to steal credentials or OTPs. Never enter passwords or OTPs on unverified sites.',
-    complaint: 'To file a complaint on CyberShield, navigate to "File Complaint", enter the incident details, and click "AI Classify" to auto-detect crime category and severity.',
-    helpline: '1930 is the official National Cyber Crime Reporting Helpline by the Ministry of Home Affairs (MHA), Government of India for rapid financial freeze.',
-    default: 'Hello! I am CyberShield AI Assistant. I can help guide you through reporting cyber incidents, understanding threats like UPI scams, and securing your accounts.'
-  }
-};
-
-const chatWithAI = async (req, res) => {
-  try {
-    const { message, history = [], language = 'English' } = req.body;
-    if (!message) {
-      return res.status(400).json({ success: false, message: 'Message is required' });
-    }
-
-    const systemPrompt = `You are CyberShield AI Assistant — a helpful, multilingual cybersecurity expert chatbot on an Indian national cybercrime reporting platform. You assist citizens across India.
-
-LANGUAGE INSTRUCTION:
-- Target Language: "${language}".
-- If the requested language is "${language}" (such as Hindi, Marathi, Bengali, Tamil, Telugu, Gujarati, Kannada, Malayalam, Punjabi, or Hinglish), you MUST reply fluently, naturally, and respectfully in that language!
-
-YOUR ROLE:
-- Explain cybercrime types (UPI fraud, phishing, OTP scams, identity theft, harassment)
-- Guide users on filing complaints on CyberShield
-- Offer immediate safety steps (call national cyber helpline 1930, freeze accounts, report on portal)
-- Answer questions clearly and reassuringly.
-
-Keep responses concise (2-4 sentences max), empathetic, and easy to understand.
-
-Previous conversation:
-${history.map(h => `${h.role}: ${h.content}`).join('\n')}
-`;
-
-    let reply;
-    try {
-      reply = await generateWithFallback(`${systemPrompt}\n\nUser: ${message}`);
-    } catch (apiErr) {
-      console.warn('Using local multi-lingual fallback due to Google API demand spike:', apiErr.message);
-      const langKey = LOCAL_KNOWLEDGE[language] ? language : (language === 'Hindi' ? 'Hindi' : 'English');
-      const dict = LOCAL_KNOWLEDGE[langKey] || LOCAL_KNOWLEDGE['English'];
-      const mLower = message.toLowerCase();
-
-      if (mLower.includes('upi') || mLower.includes('bank') || mLower.includes('paisa') || mLower.includes('money') || mLower.includes('paise') || mLower.includes('fraud')) {
-        reply = dict.upi;
-      } else if (mLower.includes('phish') || mLower.includes('link') || mLower.includes('sms') || mLower.includes('otp')) {
-        reply = dict.phishing;
-      } else if (mLower.includes('complaint') || mLower.includes('file') || mLower.includes('report') || mLower.includes('shikayat') || mLower.includes('takrar')) {
-        reply = dict.complaint;
-      } else if (mLower.includes('1930') || mLower.includes('helpline') || mLower.includes('number') || mLower.includes('call')) {
-        reply = dict.helpline;
-      } else {
-        reply = dict.default;
-      }
-    }
-
-    res.json({ success: true, data: { reply } });
-  } catch (error) {
-    console.error('Chatbot Error:', error);
-    res.status(500).json({ success: false, message: 'Chatbot failed', error: error.message });
   }
 };
 
