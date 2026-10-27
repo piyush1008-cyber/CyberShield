@@ -157,4 +157,4 @@ Open your browser at: **`http://localhost:5173`**
 ---
 
 ## 📜 License
-Developed as an Advanced Capstone Project by Peeyoosh Kangle & Team (2026).
+Developed as an Advanced Final Year Capstone Project by Sarthak Joshi, Peeyoosh Kangle & Team (2026).
