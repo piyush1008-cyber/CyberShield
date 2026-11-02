@@ -2,6 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/piyush1008-cyber/CyberShield/actions/workflows/ci.yml"><img src="https://github.com/piyush1008-cyber/CyberShield/actions/workflows/ci.yml/badge.svg" alt="CI Build Suite" /></a>
+  <a href="https://github.com/xerj-org/xerj"><img src="https://img.shields.io/badge/Indexed%20by-XERJ%20Corpus%20Hub-blueviolet?style=for-the-badge&logo=github" alt="Indexed by XERJ Corpus Hub" /></a>
   <img src="https://img.shields.io/badge/CyberShield-v2.0_AI_Edition-indigo?style=for-the-badge&logo=shield" alt="Version" />
   <img src="https://img.shields.io/badge/AI_Engine-Gemini_3.8_Flash-blue?style=for-the-badge&logo=google" alt="AI Engine" />
   <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
@@ -17,6 +18,10 @@
 **CyberShield** is an enterprise-grade, **AI-powered cybercrime redressal and threat intelligence platform** designed for citizens, cybersecurity investigators, and law enforcement agencies. 
 
 Unlike traditional static complaint portals, CyberShield integrates **Google Gemini 3.8 Flash NLP**, **real-time heuristic URL threat scanning**, an **11-language Indian AI assistant**, **interactive visual analytics**, and **automated PDF forensic incident reporting** to drastically reduce incident response times and bridge the digital divide for Indian citizens.
+
+### 🏆 Recognition
+
+> **Selected for the [XERJ Corpus Hub](https://github.com/xerj-org/xerj)** — CyberShield's Mega Upgrade architecture (AI priority engine, Sec 65B cryptographic evidence hashing, SOS kit, and Resolution Report — 18 files, ~810 lines) was reviewed and indexed as a reference implementation for AI coding agents by the XERJ open-source project.
 
 ---
 
