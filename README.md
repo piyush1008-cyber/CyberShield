@@ -149,18 +149,5 @@ Open your browser at: **`http://localhost:5173`**
 
 ---
 
-## 🎤 Presentation & Viva Q&A Cheat Sheet
-
-### Q1: "How is this project different from traditional complaint portals?"
-> *"Traditional portals are passive record-keepers. CyberShield acts as an active intelligence layer. It uses Google Gemini 3.8 Flash to auto-classify cybercrime types and calculate threat severity scores upon submission, provides real-time phishing URL risk scanning, speaks 11 Indian regional languages to assist non-English speakers, and produces court-admissible PDF incident reports."*
-
-### Q2: "What happens if the Google Gemini API has a high-demand spike or outage?"
-> *"We engineered an automatic multi-model fallback pipeline that tries Gemini 3.8 Flash, Gemini Flash Latest, and Gemini 2.5 Flash Lite. Furthermore, we implemented a local cybersecurity knowledge base so the portal continues to deliver emergency response steps (1930 helpline, bank freeze protocols) with 100% uptime even if external APIs are unreachable."*
-
-### Q3: "How is user data and role separation enforced?"
-> *"Every API route is guarded by JWT authentication middleware and Role-Based Access Control (RBAC). Citizens can only view and export their own complaints, investigators access only assigned cases, and administrators have control over system analytics and user management."*
-
----
-
 ## 📜 License
-Developed as an Advanced Final Year Capstone Project by Sarthak Joshi, Peeyoosh Kangle & Team (2026).
+Developed as an Advanced Capstone Project by Peeyoosh Kangle & Team (2026).
