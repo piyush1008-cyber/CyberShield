@@ -1,6 +1,7 @@
 # 🛡️ CyberShield — AI-Powered Cybersecurity & Incident Management Platform
 
 <p align="center">
+  <a href="https://github.com/piyush1008-cyber/CyberShield/actions/workflows/ci.yml"><img src="https://github.com/piyush1008-cyber/CyberShield/actions/workflows/ci.yml/badge.svg" alt="CI Build Suite" /></a>
   <img src="https://img.shields.io/badge/CyberShield-v2.0_AI_Edition-indigo?style=for-the-badge&logo=shield" alt="Version" />
   <img src="https://img.shields.io/badge/AI_Engine-Gemini_3.8_Flash-blue?style=for-the-badge&logo=google" alt="AI Engine" />
   <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />

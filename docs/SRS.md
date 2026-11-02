@@ -4,7 +4,7 @@
 
 **Version:** 1.0  
 **Date:** June 2026  
-**Author:** Abdul
+**Author:** Peeyoosh Kangle
 
 ---
 
@@ -329,4 +329,4 @@ graph TB
 
 | Version | Date | Author | Description |
 |---|---|---|---|
-| 1.0 | June 2026 | Abdul | Initial SRS document |
+| 1.0 | June 2026 | Peeyoosh Kangle | Initial SRS document |
