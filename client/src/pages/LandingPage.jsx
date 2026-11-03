@@ -331,6 +331,41 @@ const LandingPage = () => {
           </div>
         </section>
 
+        {/* ─── 8.5 OPEN-SOURCE RECOGNITION: XERJ CORPUS HUB ─── */}
+        <section className="mt-8 bg-gradient-to-r from-[#0A192F] via-[#0D2447] to-[#1E1B4B] rounded-xl p-5 sm:p-6 text-white border border-indigo-500/40 shadow-lg">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-start sm:items-center gap-3.5">
+              <div className="w-12 h-12 rounded-lg bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center flex-shrink-0 text-2xl shadow-inner">
+                🏆
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-500/30 text-indigo-300 px-2.5 py-0.5 rounded-full border border-indigo-400/30">
+                    Open-Source Recognition
+                  </span>
+                  <span className="text-[10px] font-mono text-emerald-400 font-semibold bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-800/50">
+                    ✓ Selected for XERJ Corpus Hub (Austin, TX)
+                  </span>
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-white mt-1">
+                  Indexed as AI Reference Implementation
+                </h3>
+                <p className="text-xs text-slate-300 mt-0.5 max-w-2xl leading-relaxed">
+                  CyberShield's production architecture (18 files, ~810 lines covering Section 65B cryptographic forensic hashing, Gemini NLP triage, and incident resolution workflows) was reviewed and selected as an official reference standard for AI coding agents.
+                </p>
+              </div>
+            </div>
+            <a
+              href="https://github.com/xerj-org/xerj"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all shadow flex-shrink-0 border border-indigo-400/30"
+            >
+              Explore XERJ Hub &rarr;
+            </a>
+          </div>
+        </section>
+
         {/* ─── 9. PROJECT SYSTEM METRICS ─── */}
         <section id="stats" className="mt-12 bg-white rounded-lg border border-slate-200 p-6 shadow-sm">
           <h2 className="text-base font-bold text-[#0A2540] border-l-4 border-indigo-600 pl-3 uppercase tracking-wide mb-6">
@@ -424,7 +459,7 @@ const LandingPage = () => {
         </div>
 
         <div className="border-t border-slate-800 pt-4 px-4 sm:px-8 text-center text-[10px] text-slate-500">
-          <p>© 2026 CyberShield — Final Year Engineering Capstone Project. Developed by Sarthak Joshi & Team.</p>
+          <p>© 2026 CyberShield — Final Year Engineering Capstone Project. Engineered by Peeyoosh Kangle & Team.</p>
         </div>
       </footer>
     </div>
